@@ -1,0 +1,29 @@
+language: go
+
+before_install:
+  - go get -u github.com/kardianos/govendor
+  - govendor update +e
+  - govendor list
+
+go:
+- 1.10.2
+install: true
+
+env:
+  matrix:
+  - NAME=terraform-provider-k8s
+
+script: ls vendor; CGO_ENABLED=0 go build
+
+deploy:
+  provider: releases
+  api_key: $GH_TOKEN
+  file: $NAME
+  skip_cleanup: true
+  on:
+    tags: true
+
+notifications:
+  email:
+    recipients:
+    - thb.krkr+travis@gmail.com
